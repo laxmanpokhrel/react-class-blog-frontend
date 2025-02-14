@@ -7,9 +7,9 @@ const UserBlog = lazy(() => import('../pages/UserBlog'));
 const Login = lazy(() => import('../pages/Login'));
 
 export const appRoutes = [
-    { name: "", path: "/", element: Home },
-    { name: "", path: "/blog", element: Blog },
-    { name: "", path: "/blog-details/:blogName", element: BlogDetails },
-    { name: "", path: "/user-blog", element: UserBlog },
-    { name: "", path: "/login", element: Login }
+    { name: "home", path: "/", element: Home },
+    { name: "blog", path: "/blog", element: Blog },
+    { name: "blog-details", path: "/blog-details/:blogName", element: BlogDetails },
+    { name: "user-blog", path: "/user-blog", element: UserBlog },
+    { name: "login", path: "/login", element: Login }
 ]
