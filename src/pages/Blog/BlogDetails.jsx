@@ -5,7 +5,7 @@ import BlogDetailsSkeleton from './BlogDetailsSkeleton';
 
 export default function BlogDetails() {
   const { blogName } = useParams();
-  const [blog, setBlog] = useState();
+  const [blog, setBlog] = useState({ title: 'Title' });
   console.log('🚀 ~ BlogDetails ~ blog:', blog);
   const [blogError, setBlogError] = useState(false);
   const [isBlogLoading, setIsBlogLoading] = useState(true);
@@ -45,7 +45,7 @@ export default function BlogDetails() {
               star
             </i>
           ) : null}
-          <h4 className="text-5xl font-semibold">{blog?.title}</h4>
+          <h4 className="text-5xl font-semibold">{blog.title}</h4>
           <div className="flex gap-2">
             <p className="text-sm">{blog?.author} : </p>
             <p className="text-sm">{blog?.created_at}</p>
