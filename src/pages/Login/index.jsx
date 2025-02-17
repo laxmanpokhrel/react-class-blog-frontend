@@ -1,18 +1,40 @@
 import { useState } from 'react';
+import { login } from '../../services';
+import { useNavigate } from 'react-router';
 
 export default function Login() {
   // Two way binding
   const [loginData, setLoginData] = useState({ email: null, password: null });
-  const onSubmitHandler = (e) => {
+  const [loginError, setLoginError] = useState(null);
+  const navigate = useNavigate();
+
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    // Hit login api
     console.log('submitting form...');
+
+    try {
+      // Hit login api
+      const response = await login({
+        username: loginData.email,
+        password: loginData.password,
+      });
+
+      // Save tokens in local storage
+      localStorage.setItem('token', response.token);
+      navigate('/create-blog');
+      setLoginError(null);
+    } catch (error) {
+      setLoginError('Email or password do not match.');
+    }
   };
 
   return (
     <div className="md:w-1/2 w-full mx-auto mt-4">
       <h2 className="text-2xl font-bold">Signin </h2>
       <h2 className="text-lg font-light">Signin to create your blogs</h2>
+      {loginError ? (
+        <p className="bg-red-100 p-1 rounded-lg text-xs">{loginError}</p>
+      ) : null}
       <form onSubmit={onSubmitHandler} className="flex mt-3 flex-col gap-3">
         <div className="flex flex-col gap-1">
           <label htmlFor="email">Email</label>

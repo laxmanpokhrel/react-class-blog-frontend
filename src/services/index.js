@@ -22,7 +22,7 @@ export const retrieveBlog = async (blogSlug) => {
     }
 }
 
-export const login = async () => {
+export const login = async (body) => {
     // token
     // 1. JWT (JSON Web token) = <header>.<payload>.<signature>  
     // 2. Normal Token = <>
@@ -34,7 +34,11 @@ export const login = async () => {
     // Just hit the api
 
     try {
-        const res = await fetch("http://localhost:3000/login", { body: { email: "test@yopmail.com", "password": "Test@123" } })
+        const res = await fetch("http://localhost:3000/login", {
+            body: JSON.stringify(body),
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        })
         const data = await res.json()
         if (res.ok) {
             return data
