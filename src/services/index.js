@@ -22,7 +22,7 @@ export const retrieveBlog = async (blogSlug) => {
     }
 }
 
-export const login = async (body) => {
+export const loginUser = async (body) => {
     // token
     // 1. JWT (JSON Web token) = <header>.<payload>.<signature>  
     // 2. Normal Token = <>
