@@ -1,4 +1,8 @@
-[]: Create form to upload blog
-[]: Create api to upload blog
-[]: Update blog
+[x]: Create form to upload blog
+[x]: Create api to upload blog
+[x]: Update blog
 []: Delete blog
+[]: Debug radio btns
+[]: work on styling app
+[]: authenticated user blog table which has edit and delete btns
+[]: in case of delete confirm the deletion of blog from user

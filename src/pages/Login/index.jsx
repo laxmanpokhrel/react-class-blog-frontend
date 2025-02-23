@@ -23,7 +23,7 @@ export default function Login() {
 
       // Save tokens in local storage
       localStorage.setItem('token', response.token);
-      navigate('/create-blog');
+      navigate('/blog/create');
       login();
       setLoginError(null);
     } catch (error) {
