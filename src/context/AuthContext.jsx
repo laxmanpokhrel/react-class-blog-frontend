@@ -9,6 +9,7 @@ export default function AuthContextProvider({ children }) {
   const login = () => {
     setIsLoggedIn(true);
   };
+
   const logout = () => {
     setIsLoggedIn(false);
   };
