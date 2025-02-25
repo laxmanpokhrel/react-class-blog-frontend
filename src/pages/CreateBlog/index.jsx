@@ -1,7 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../context/AuthContext';
-import { patchBlog, postBlog, retrieveBlog } from '../../services';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
+import { patchBlog, postBlog, retrieveBlog } from '../../services';
+import { logout } from '../../store/slice/authSlice';
 
 const blogFields = [
   { name: 'Title', id: 'title', type: 'input', inputType: 'text' },
@@ -19,10 +20,10 @@ const blogFields = [
 ];
 
 export default function CreateBlog() {
-  const { logout } = useContext(AuthContext);
   const [blogData, setBlogData] = useState({});
   const navigate = useNavigate();
   const { blogSlug } = useParams();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!blogSlug) return;
@@ -39,7 +40,7 @@ export default function CreateBlog() {
 
   const logoutHandler = () => {
     localStorage.removeItem('token');
-    logout();
+    dispatch(logout());
   };
 
   const handleBlogFormSubmit = async (e) => {

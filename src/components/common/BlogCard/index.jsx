@@ -1,10 +1,9 @@
-import { useContext } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { AuthContext } from '../../../context/AuthContext';
 
 export default function BlogCard({ slug, title, summary, created_at, author }) {
   const navigate = useNavigate();
-  const { isLoggedIn } = useContext(AuthContext);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   return (
     <div
