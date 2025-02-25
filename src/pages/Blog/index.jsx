@@ -1,21 +1,16 @@
-import { useEffect, useState } from 'react';
-import { fetchBlogs } from '../../services';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import BlogCard from '../../components/common/BlogCard';
 import BlogSkeleton from '../../components/common/BlogCard/BlogSkeleton';
+import { fetchBlogs } from '../../store/slice/blogSlice';
 
 export default function Blog() {
-  const [blogs, setBlogs] = useState();
-  const [isBlogLoading, setIsBlogLoading] = useState(true);
+  const dispatch = useDispatch();
+  const blogStatus = useSelector((state) => state.blog.status);
+  const blogs = useSelector((state) => state.blog.blogs);
+
   useEffect(() => {
-    (async () => {
-      try {
-        const result = await fetchBlogs();
-        setBlogs(result);
-        setIsBlogLoading(false);
-      } catch (err) {
-        console.log('Error fetching blogs', err);
-      }
-    })();
+    dispatch(fetchBlogs());
   }, []);
 
   return (
@@ -25,11 +20,11 @@ export default function Blog() {
       </h1>
       <p className="text-gray-800 font-roboto">Learn the wisdom. </p>
       <div className="grid grid-cols-12 gap-4">
-        {isBlogLoading
+        {blogStatus === 'pending'
           ? Array.from({ length: 6 })?.map((_, index) => (
               <BlogSkeleton key={index} />
             ))
-          : blogs?.result?.map((blog) => (
+          : blogs?.map((blog) => (
               <BlogCard
                 key={blog.title}
                 title={blog.title}
