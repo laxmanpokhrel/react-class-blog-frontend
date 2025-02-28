@@ -1,7 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import storage from 'redux-persist/lib/storage'
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import { setupListeners } from '@reduxjs/toolkit/query';
+
 import rootReducer from "./reducer"
+import { blogApi } from './slice/blogSlice';
+import { authApi } from './slice/authSlice';
 
 
 const persistConfig = {
@@ -19,7 +23,10 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }),
+        }).concat(blogApi.middleware, authApi.middleware),
 })
 
 export default persistStore(store);
+
+setupListeners(store.dispatch)
+

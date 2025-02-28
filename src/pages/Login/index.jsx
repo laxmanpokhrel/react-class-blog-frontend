@@ -1,26 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { loginUser } from '../../store/slice/authSlice';
+import { login, useLoginUserMutation } from '../../store/slice/authSlice';
 
 export default function Login() {
-  // Two way binding
-  const [loginData, setLoginData] = useState({ email: null, password: null });
+  const [loginUserMutate, { isSuccess, data }] = useLoginUserMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(login());
+      localStorage.setItem('token', data?.token);
+      navigate('/blog/create');
+    }
+  }, [isSuccess, data, dispatch, navigate]);
+
+  // Two way binding
+  const [loginData, setLoginData] = useState({ email: null, password: null });
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     console.log('submitting form...');
 
     // Hit login api
-    dispatch(
-      loginUser({
-        username: loginData.email,
-        password: loginData.password,
-      })
-    );
-    navigate('/blog/create');
+    // dispatch(
+    //   loginUser({
+    //     username: loginData.email,
+    //     password: loginData.password,
+    //   })
+    // );
+
+    loginUserMutate({
+      username: loginData.email,
+      password: loginData.password,
+    });
   };
 
   return (

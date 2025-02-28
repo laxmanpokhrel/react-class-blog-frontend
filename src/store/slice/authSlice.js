@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+import { createSlice } from '@reduxjs/toolkit'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 // token
 // 1. JWT (JSON Web token) = <header>.<payload>.<signature>  
@@ -10,9 +10,23 @@ import axios from 'axios'
 // cookie
 // Frontend
 // Just hit the api
-export const loginUser = createAsyncThunk("auth/loginUser", async (payload) => {
-    const response = await axios.post('http://localhost:3000/login', payload)
-    return response.data
+// export const loginUser = createAsyncThunk("auth/loginUser", async (payload) => {
+//     const response = await axios.post('http://localhost:3000/login', payload)
+//     return response.data
+// })
+
+export const authApi = createApi({
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
+    endpoints: (build) => ({
+        loginUser: build.mutation({
+            query: (payload) => ({
+                url: `login`,
+                method: 'POST',
+                body: payload,
+            }),
+
+        }),
+    }),
 })
 
 
@@ -30,24 +44,26 @@ export const authSlice = createSlice({
             state.isLoggedIn = false
         },
     },
-    extraReducers: builder => {
-        builder
-            .addCase(loginUser.pending, (state, action) => {
-                state.status = 'loading'
-            })
-            .addCase(loginUser.fulfilled, (state, action) => {
-                state.isLoggedIn = true
-                localStorage.setItem('token', action.payload.token);
+    // extraReducers: builder => {
+    //     builder
+    //         .addCase(loginUser.pending, (state, action) => {
+    //             state.status = 'loading'
+    //         })
+    //         .addCase(loginUser.fulfilled, (state, action) => {
+    //             state.isLoggedIn = true
+    //             localStorage.setItem('token', action.payload.token);
 
-            })
-            .addCase(loginUser.rejected, () => {
-                // Display notification
-                console.log("Cannot login user!")
-            })
-    }
+    //         })
+    //         .addCase(loginUser.rejected, () => {
+    //             // Display notification
+    //             console.log("Cannot login user!")
+    //         })
+    // }
 })
 
 // Action creators are generated for each case reducer function
 export const { login, logout } = authSlice.actions
 
 export default authSlice.reducer
+
+export const { useLoginUserMutation } = authApi

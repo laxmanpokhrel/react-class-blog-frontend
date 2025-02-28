@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 import { patchBlog, postBlog } from '../../services';
 import { logout } from '../../store/slice/authSlice';
-import { retrieveBlog } from '../../store/slice/blogSlice';
+import {
+  retrieveBlog,
+  useGetBlogByNameQuery,
+} from '../../store/slice/blogSlice';
 
 const blogFields = [
   { name: 'Title', id: 'title', type: 'input', inputType: 'text' },
@@ -26,13 +29,13 @@ export default function CreateBlog() {
   const { blogSlug } = useParams();
   const dispatch = useDispatch();
 
-  const retrieveBlogData = useSelector(
-    (state) => state.blog.retrieveBlogDetail
-  );
+  // const retrieveBlogData = useSelector(
+  //   (state) => state.blog.retrieveBlogDetail
+  // );
 
-  useEffect(() => {
-    setBlogData(retrieveBlogData);
-  }, [retrieveBlogData]);
+  // useEffect(() => {
+  //   setBlogData(retrieveBlogData);
+  // }, [retrieveBlogData]);
 
   // useEffect(() => {
   //   if (!blogSlug) return;
@@ -49,11 +52,25 @@ export default function CreateBlog() {
 
   // const {isLoading,isError,data} = dispatch(retrieveBlog(blogSlug));
 
-  useEffect(() => {
-    if (!blogSlug) return;
+  const {
+    isLoading,
+    isError,
+    data: retrieveBlogData,
+  } = useGetBlogByNameQuery(blogSlug);
 
-    dispatch(retrieveBlog(blogSlug));
-  }, [blogSlug]);
+  useEffect(() => {
+    setBlogData(retrieveBlogData?.result || {});
+  }, [retrieveBlogData]);
+
+  console.log('🚀 ~ CreateBlog ~ isLoading:', isLoading);
+  console.log('🚀 ~ CreateBlog ~ data:', retrieveBlogData);
+  console.log('🚀 ~ CreateBlog ~ isError:', isError);
+
+  // useEffect(() => {
+  //   if (!blogSlug) return;
+
+  //   dispatch(retrieveBlog(blogSlug));
+  // }, [blogSlug]);
 
   const logoutHandler = () => {
     localStorage.removeItem('token');

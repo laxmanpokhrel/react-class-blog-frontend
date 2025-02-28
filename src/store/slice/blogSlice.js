@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from "axios"
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
 
 
 export const fetchBlogs = createAsyncThunk('blogs/fetchBlogs', async () => {
@@ -11,6 +13,18 @@ export const retrieveBlog = createAsyncThunk('blogs/retrieveBlog', async (blogSl
     const response = await axios.get(`http://localhost:3000/blog/${blogSlug}`)
     return response.data.result
 })
+
+export const blogApi = createApi({
+    reducerPath: 'blogApi',
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
+    endpoints: (build) => ({
+        getBlogByName: build.query({
+            query: (blogSlug) => `blog/${blogSlug}`,
+        }),
+    }),
+})
+
+
 
 export const blogSlice = createSlice({
     name: 'blog',
@@ -46,3 +60,8 @@ export const blogSlice = createSlice({
 export const { resetBlog } = blogSlice.actions
 
 export default blogSlice.reducer
+
+// Export hooks for usage in functional components, which are
+// auto-generated based on the defined endpoints
+export const { useGetBlogByNameQuery } = blogApi
+
