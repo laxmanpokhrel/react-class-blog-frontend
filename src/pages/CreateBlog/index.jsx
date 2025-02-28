@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
-import { patchBlog, postBlog, retrieveBlog } from '../../services';
+import { patchBlog, postBlog } from '../../services';
 import { logout } from '../../store/slice/authSlice';
+import { retrieveBlog } from '../../store/slice/blogSlice';
 
 const blogFields = [
   { name: 'Title', id: 'title', type: 'input', inputType: 'text' },
@@ -25,17 +26,33 @@ export default function CreateBlog() {
   const { blogSlug } = useParams();
   const dispatch = useDispatch();
 
+  const retrieveBlogData = useSelector(
+    (state) => state.blog.retrieveBlogDetail
+  );
+
+  useEffect(() => {
+    setBlogData(retrieveBlogData);
+  }, [retrieveBlogData]);
+
+  // useEffect(() => {
+  //   if (!blogSlug) return;
+
+  //   (async () => {
+  //     try {
+  //       const { result } = await retrieveBlog(blogSlug);
+  //       setBlogData(result);
+  //     } catch (err) {
+  //       console.log('Error fetching blogs', err);
+  //     }
+  //   })();
+  // }, [blogSlug]);
+
+  // const {isLoading,isError,data} = dispatch(retrieveBlog(blogSlug));
+
   useEffect(() => {
     if (!blogSlug) return;
 
-    (async () => {
-      try {
-        const { result } = await retrieveBlog(blogSlug);
-        setBlogData(result);
-      } catch (err) {
-        console.log('Error fetching blogs', err);
-      }
-    })();
+    dispatch(retrieveBlog(blogSlug));
   }, [blogSlug]);
 
   const logoutHandler = () => {
@@ -48,6 +65,7 @@ export default function CreateBlog() {
     if (blogSlug) {
       await patchBlog(blogSlug, blogData);
     } else {
+      // dispatch(postBlog(blogData))
       await postBlog(blogData);
     }
     navigate('/user-blog');

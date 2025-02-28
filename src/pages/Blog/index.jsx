@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import BlogCard from '../../components/common/BlogCard';
 import BlogSkeleton from '../../components/common/BlogCard/BlogSkeleton';
 import { fetchBlogs } from '../../store/slice/blogSlice';
+// import { fetchBlogs } from '../../store/slice/blogSlice';
 
 export default function Blog() {
   const dispatch = useDispatch();
-  const blogStatus = useSelector((state) => state.blog.status);
-  const blogs = useSelector((state) => state.blog.blogs);
+  const blogStatus = useSelector((state) => state.blog?.status);
+  const blogs = useSelector((state) => state.blog?.blogs);
 
   useEffect(() => {
     dispatch(fetchBlogs());

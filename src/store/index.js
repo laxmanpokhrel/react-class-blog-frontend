@@ -1,12 +1,25 @@
 import { configureStore } from '@reduxjs/toolkit'
-import counterSlice from "./slice/counterSlice"
-import blogSlice from "./slice/blogSlice"
-import authSlice from "./slice/authSlice"
+import storage from 'redux-persist/lib/storage'
+import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import rootReducer from "./reducer"
 
-export default configureStore({
-    reducer: {
-        counter: counterSlice,
-        blog: blogSlice,
-        auth: authSlice
-    },
+
+const persistConfig = {
+    key: 'root',
+    version: 1,
+    storage,
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+export const store = configureStore({
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        }),
 })
+
+export default persistStore(store);
