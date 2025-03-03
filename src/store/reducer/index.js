@@ -1,6 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import counterReducer from "../slice/counterSlice";
 import blogReducer from "../slice/blogSlice";
+import cartReducer from "../slice/cartSlice";
 import authReducer, { authApi } from "../slice/authSlice";
 import { blogApi } from '../slice/blogSlice';
 
@@ -12,5 +13,6 @@ export default combineReducers({
     counter: counterReducer,
     blog: blogReducer,
     auth: authReducer,
+    cart: cartReducer
 
 })

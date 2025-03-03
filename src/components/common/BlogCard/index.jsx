@@ -1,17 +1,19 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { addToCart } from '../../../store/slice/cartSlice';
 
 export default function BlogCard({ slug, title, summary, created_at, author }) {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
 
   return (
     <div
       onClick={() => navigate(`/blog-details/${slug}`)}
       className="col-span-12 md:col-span-4 font-roboto lg:col-span-3  shadow p-4 border border-gray-300 rounded-2xl hover:bg-gray-50 cursor-pointer"
     >
-      {isLoggedIn ? (
-        <div className="w-full flex justify-end">
+      <div className="w-full flex gap-4 justify-end">
+        {isLoggedIn ? (
           <button
             type="button"
             className=" cursor-pointer"
@@ -22,8 +24,22 @@ export default function BlogCard({ slug, title, summary, created_at, author }) {
           >
             <i className="material-symbols-outlined text-xs">edit</i>
           </button>
-        </div>
-      ) : null}
+        ) : null}
+        <button
+          type="button"
+          className=" cursor-pointer"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isLoggedIn) navigate(`/login`);
+            else {
+              dispatch(addToCart(slug));
+            }
+          }}
+        >
+          <i className="material-symbols-outlined text-xs">shopping_cart</i>
+        </button>
+      </div>
+
       <div>
         <h2 className="text-xl font-bold text-gray-800">{title}</h2>
         <p className="text-sm text-gray-700">{summary}</p>
