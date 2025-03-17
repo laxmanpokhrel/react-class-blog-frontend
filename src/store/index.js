@@ -5,6 +5,7 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 
 import rootReducer from "./reducer"
 import { blogApi } from './slice/blogSlice';
+import { cartApi } from './slice/cartSlice';
 import { authApi } from './slice/authSlice';
 
 
@@ -23,7 +24,7 @@ export const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(blogApi.middleware, authApi.middleware),
+        }).concat(blogApi.middleware, authApi.middleware, cartApi.middleware),
 })
 
 export default persistStore(store);

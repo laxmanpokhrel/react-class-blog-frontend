@@ -6,13 +6,37 @@ import {
   incrementByAmount,
   resetCount,
 } from '../../store/slice/counterSlice';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export default function Home() {
   const navigate = useNavigate();
   const count = useSelector((state) => state.counter.value);
   const dispatch = useDispatch();
-  const [countValue, setCountValue] = useState(0);
+  const [countValue, setCountValue] = useState(1);
+
+  // expensive functions
+  const expHandlerFunction = () => {
+    let count = 1000;
+    for (let i = 0; i < count; i++) {
+      console.log(i, ': Count', countValue);
+    }
+  };
+
+  const expCalculatorFunction = () => {
+    let count = 50;
+    for (let i = 0; i < count; i++) {
+      console.log(i, ': Count expCalculatorFunction');
+    }
+    return count;
+  };
+
+  // const memoizedExpFunction = useCallback(expHandlerFunction, []);
+  const memoizedExpValue = useMemo(expCalculatorFunction, []);
+  // const memoizedExpValue = expCalculatorFunction();
+
+  // expFunction();
+  expHandlerFunction;
+  // expensively calculated value
 
   return (
     <div className="flex items-center justify-center p-4 flex-col gap-4 h-full ">
@@ -30,9 +54,13 @@ export default function Home() {
         <input
           type="number"
           className="border rounded-2xl h-[2rem]"
-          onChange={(e) => setCountValue(e.target.value)}
+          onChange={(e) => {
+            setCountValue(e.target.value);
+            // memoizedExpFunction();
+          }}
           value={countValue}
         />
+        {/* {random} */}
         <button
           type="button"
           className=" p-2 bg-gray-200 rounded-lg cursor-pointer"
@@ -52,11 +80,13 @@ export default function Home() {
           Reset
         </button>
       </div>
+      {memoizedExpValue}
       <button
         type="button"
         className=" p-2 bg-gray-200 rounded-lg cursor-pointer"
         onClick={() => {
           dispatch(increment());
+          // memoizedExpFunction();
         }}
       >
         Increment

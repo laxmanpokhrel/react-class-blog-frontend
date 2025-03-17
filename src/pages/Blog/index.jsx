@@ -4,6 +4,8 @@ import BlogCard from '../../components/common/BlogCard';
 import BlogSkeleton from '../../components/common/BlogCard/BlogSkeleton';
 import { fetchBlogs } from '../../store/slice/blogSlice';
 import { useNavigate } from 'react-router';
+import ErrorBoundary from '../../components/common/ErrorBoundary';
+import Chart from './Chart';
 // import { fetchBlogs } from '../../store/slice/blogSlice';
 
 export default function Blog() {
@@ -30,9 +32,9 @@ export default function Blog() {
           onClick={(e) => {
             e.stopPropagation();
             if (!isLoggedIn) navigate(`/login`);
-            // else {
-            //   dispatch(addToCart(slug));
-            // }
+            else {
+              navigate('/cart');
+            }
           }}
         >
           <i className="material-symbols-outlined text-xs">shopping_cart</i>
@@ -57,6 +59,7 @@ export default function Blog() {
               />
             ))}
       </div>
+      <Chart />
     </div>
   );
 }

@@ -1,4 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
+
+
+export const cartApi = createApi({
+    reducerPath: 'cartApi',
+    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/' }),
+    endpoints: (build) => ({
+        getCartDetailByName: build.query({
+            query: (blogSlug) => `blog/${blogSlug}`,
+        }),
+    }),
+})
+
 
 export const cartSlice = createSlice({
     name: 'cart',
@@ -20,3 +34,4 @@ export const cartSlice = createSlice({
 export const { addToCart } = cartSlice.actions
 
 export default cartSlice.reducer
+export const { useGetCartDetailByNameQuery } = cartApi

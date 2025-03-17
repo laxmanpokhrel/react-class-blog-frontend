@@ -1,14 +1,17 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import BlogDetailsSkeleton from './BlogDetailsSkeleton';
 import { useDispatch, useSelector } from 'react-redux';
 import { retrieveBlog } from '../../store/slice/blogSlice';
 
-export default function BlogDetails() {
+const Component = () => {
+  // Expensive Component
   const { blogName } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const blog = useSelector((state) => state.blog.retrieveBlogDetail);
+
   const retrieveBlogStatus = useSelector(
     (state) => state.blog.retrieveBlogStatus
   );
@@ -80,4 +83,8 @@ export default function BlogDetails() {
       )}
     </div>
   );
-}
+};
+
+const BlogDetails = memo(Component);
+
+export default BlogDetails;

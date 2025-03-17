@@ -1,8 +1,11 @@
+import { hasErrorBoundary } from '@xmanscript/has-error-boundary';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { addToCart } from '../../../store/slice/cartSlice';
+import { memo, useState } from 'react';
 
-export default function BlogCard({ slug, title, summary, created_at, author }) {
+const BlogCard = memo(({ slug, title, summary, created_at, author }) => {
+  const [count, setCount] = useState(0);
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
@@ -48,6 +51,20 @@ export default function BlogCard({ slug, title, summary, created_at, author }) {
         <p className="text-sm text-gray-700">{author} - </p>
         <p className="text-sm text-gray-700">{created_at}</p>
       </div>
+      <p>{count}</p>
+      <button
+        className="cursor-pointer"
+        onClick={(e) => {
+          setCount((prevCount) => prevCount + 1);
+          e.stopPropagation();
+        }}
+      >
+        Plus
+      </button>
     </div>
   );
-}
+});
+
+BlogCard.displayName = 'BlogCard';
+
+export default hasErrorBoundary(BlogCard);
