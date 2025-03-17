@@ -1,29 +1,38 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { retrieveBlog } from '../../services';
 import BlogDetailsSkeleton from './BlogDetailsSkeleton';
+import { useDispatch, useSelector } from 'react-redux';
+import { retrieveBlog } from '../../store/slice/blogSlice';
 
-export default function BlogDetails() {
+const Component = () => {
+  // Expensive Component
   const { blogName } = useParams();
-  const [blog, setBlog] = useState({ title: 'Title' });
-  console.log('🚀 ~ BlogDetails ~ blog:', blog);
-  const [blogError, setBlogError] = useState(false);
-  const [isBlogLoading, setIsBlogLoading] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const blog = useSelector((state) => state.blog.retrieveBlogDetail);
+
+  const retrieveBlogStatus = useSelector(
+    (state) => state.blog.retrieveBlogStatus
+  );
+
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const { result } = await retrieveBlog(blogName);
+  //       setBlog(result);
+  //       setIsBlogLoading(false);
+  //     } catch (err) {
+  //       console.log('Error fetching blogs', err);
+  //       setBlogError(err);
+  //       setIsBlogLoading(false);
+  //     }
+  //   })();
+  // }, []);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { result } = await retrieveBlog(blogName);
-        setBlog(result);
-        setIsBlogLoading(false);
-      } catch (err) {
-        console.log('Error fetching blogs', err);
-        setBlogError(err);
-        setIsBlogLoading(false);
-      }
-    })();
-  }, []);
+    dispatch(retrieveBlog(blogName));
+  }, [blogName]);
 
   return (
     <div className="flex lg:w-1/2 p-4 w-full mx-auto h-full flex-col gap-2">
@@ -34,9 +43,9 @@ export default function BlogDetails() {
         <i className="material-symbols-outlined text-xs">keyboard_backspace</i>
         Back to blogs
       </button>
-      {blogError ? (
-        blogError.message || 'Error Fetching blog'
-      ) : isBlogLoading ? (
+      {retrieveBlogStatus === 'rejected' ? (
+        'Error Fetching blog'
+      ) : retrieveBlogStatus === 'pending' ? (
         <BlogDetailsSkeleton />
       ) : (
         <>
@@ -45,7 +54,7 @@ export default function BlogDetails() {
               star
             </i>
           ) : null}
-          <h4 className="text-5xl font-semibold">{blog.title}</h4>
+          <h4 className="text-5xl font-semibold">{blog?.title}</h4>
           <div className="flex gap-2">
             <p className="text-sm">{blog?.author} : </p>
             <p className="text-sm">{blog?.created_at}</p>
@@ -74,4 +83,8 @@ export default function BlogDetails() {
       )}
     </div>
   );
-}
+};
+
+const BlogDetails = memo(Component);
+
+export default BlogDetails;
